@@ -54,11 +54,15 @@ namespace Task1
                 case "texas-holdem":
                     List<Card> board = ParseCards(tokens[1]);
                     List<List<Card>> hands = new List<List<Card>>();
-                    for (int i = 1; i < tokens.Length; i++)
+                    List<Card> newCards = new List<Card>();
+                    for (int i = 2; i < tokens.Length; i++)
                     {
-                        List<Card> newCards = new List<Card>();
-                        newCards = ParseCards(tokens[i]); 
+                        newCards = ParseCards(tokens[i]);
                         hands.Add(newCards);
+                    }
+                    foreach (var hand in hands)
+                    {
+                        FindHandValue(hand);
                     }
                     Console.WriteLine(hands.Count);
                     break;
@@ -75,46 +79,6 @@ namespace Task1
             return checkedString;
         }
 
-        static string CheckSubStrings(string subStr)
-        {
-            while (subStr.Length > 10)
-            {
-                Console.WriteLine("You entered the wrong number of characters, please re-enter");
-                subStr = Console.ReadLine();
-            }
-            char[] cardRank = { 'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2' };
-            char[] cardSuit = { 'h', 'd', 'c', 's' };
-            StringBuilder sb = new StringBuilder(subStr.Length / 2 + 1);
-
-            for (int i = 0; i < subStr.Length; i += 2)  // Card Rank
-            {
-                foreach (char item in cardRank)
-                {
-                    if (subStr[i] == item)
-                    {
-                        sb.Append(subStr[i]);
-                    }
-                }
-
-            }
-            string resultRank = sb.ToString(); // string Rank
-
-            StringBuilder sb2 = new StringBuilder(subStr.Length / 2 + 1);
-
-            for (int i = 1; i < subStr.Length; i += 1)  // Card Suit
-            {
-                foreach (char item in cardSuit)
-                {
-                    if (subStr[i] == item)
-                    {
-                        sb2.Append(subStr[i]);
-                    }
-                }
-            }
-            string resultSuit = sb2.ToString(); // string suit
-            return subStr;
-        }
-
         public static List<Card> ParseCards(string hand)
         {
             List<Card> handList = new List<Card>();
@@ -124,6 +88,32 @@ namespace Task1
                 handList.Add(newCard);
             }
                 return handList;
+        }
+
+        public static List<Card> FindHandValue(List<Card> cards)
+        {
+            Dictionary<char, int> entries = new Dictionary<char, int>();
+            List<Card> handList = new List<Card>();
+            foreach (Card card in cards)
+            {
+                entries.Add(card.Rank, 0);  ///if char repeats, program stops
+            }
+            foreach (Card card in cards) 
+            {
+                if (card.rank != entries[card.Rank])
+                    {
+                    entries[card.rank] = 1;
+                    } 
+                else
+                    {
+                    entries[card.rank] += 1;
+                    }
+            }
+            foreach (KeyValuePair<char, int> keyValue in entries)
+            {
+                Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
+            }
+            return handList;
         }
 
     }
