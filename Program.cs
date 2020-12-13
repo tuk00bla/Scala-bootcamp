@@ -182,8 +182,23 @@ namespace Task1
 
         static bool CheckForStraight(List<Card> combCards, Dictionary<Rank, int> entries)
         {
-            
-            return true;
+            int count = 0;
+            for (int i = 0; i < combCards.Count; i++)
+            {
+                int cardValue = (int)(combCards[i+1].Rank);
+                foreach (Card card in combCards)
+                {
+                    if ((int)(combCards[i].Rank) < cardValue)
+                    {
+                        count++;
+                        if (count == 5)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         static bool CheckForFlush(List<Card> combCards, Dictionary<Rank, int> entries)
