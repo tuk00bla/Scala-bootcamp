@@ -7,27 +7,51 @@ namespace Task1
 {
     public class Card
     {
-        public char rank;
-        public char Rank
+        public Rank rank;
+        public Rank Rank
         {
             get { return rank; }
             set { rank = value; }
         }
 
-        public char suit;
-        public char Suit
+        public Suit suit;
+        public Suit Suit
         {
             get { return suit; }
             set { suit = value; }
         }
 
-        public Card(char r, char s)
+        public Card(Rank r, Suit s)
         {
             this.rank = r;
             this.suit = s;
         }
     }
+    
+  public  enum Rank
+  {
+       value2,
+       value3,
+       value4,
+       value5,
+       value6,
+       value7,
+       value8,
+       value9,
+       valueT,
+       valueJ,
+       valueQ, 
+       valueK, 
+       valueA 
+  }
 
+   public enum Suit
+   {
+        valueH,
+        valueD,
+        valueC,
+        valueS,
+   }
     class Program
     {
         static void Main(string[] args)
@@ -62,9 +86,8 @@ namespace Task1
                     }
                     foreach (var hand in hands)
                     {
-                        FindHandValue(hand);
+                        FindHandValue(hand, board);
                     }
-                    Console.WriteLine(hands.Count);
                     break;
                 case "omaha-holdem":
 
@@ -84,37 +107,110 @@ namespace Task1
             List<Card> handList = new List<Card>();
             for (int i = 0; i < hand.Length; i += 2)
             {
-                Card newCard = new Card(hand[i], hand[i + 1]);
+                Card newCard = new Card(ReturnRankEnum(hand[i]), ReturnSuitEnum(hand[i + 1]));
                 handList.Add(newCard);
             }
                 return handList;
         }
 
-        public static List<Card> FindHandValue(List<Card> cards)
+        public static List<Card> FindHandValue(List<Card> cards, List<Card> board)
         {
-            Dictionary<char, int> entries = new Dictionary<char, int>();
-            List<Card> handList = new List<Card>();
+            Dictionary<Rank, int> entries = new Dictionary<Rank, int>();
+            List<Card> maxHandValue = new List<Card>();
             foreach (Card card in cards)
             {
-                entries.Add(card.Rank, 0);  ///if char repeats, program stops
-            }
-            foreach (Card card in cards) 
-            {
-                if (card.rank != entries[card.Rank])
-                    {
-                    entries[card.rank] = 1;
-                    } 
+                if (entries.ContainsKey(card.Rank))
+                {
+                    entries[card.Rank] += 1;
+                }
                 else
-                    {
-                    entries[card.rank] += 1;
-                    }
+                {
+                    entries.Add(card.Rank, 1);
+                }
             }
-            foreach (KeyValuePair<char, int> keyValue in entries)
+            foreach (KeyValuePair<Rank, int> keyValue in entries)
             {
                 Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
+                Console.WriteLine((Rank)(keyValue.Key));
             }
-            return handList;
+            maxHandValue.AddRange(cards);
+            maxHandValue.AddRange(board);
+           bool kek = CheckForFlush(maxHandValue, entries);
+            Console.Write("kek " + kek);
+            return maxHandValue;
         }
 
+        static Rank ReturnRankEnum(char rank)
+        {
+           Rank returnRank = Rank.value2;
+           char[] charArray = { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
+           int indexOfRank = Array.IndexOf(charArray, rank);
+
+            foreach (int i in Enum.GetValues(typeof(Rank)))
+            {
+                if (indexOfRank == i)
+                {
+                    returnRank = (Rank)i;
+                }
+            }
+
+                return returnRank;
+        }
+
+        static Suit ReturnSuitEnum(char suit)
+        {
+            Suit returnSuit = Suit.valueC;
+            switch (suit)
+            {
+                case 'h':
+                    returnSuit = Suit.valueH;
+                    break;
+                case 'd':
+                    returnSuit = Suit.valueD;
+                    break;
+                case 'c':
+                    returnSuit = Suit.valueC;
+                    break;
+                case 's':
+                    returnSuit = Suit.valueS;
+                    break;
+                default:
+                    break;
+            }
+        return returnSuit;
+        }
+
+        static bool CheckForStraight(List<Card> combCards, Dictionary<Rank, int> entries)
+        {
+            
+            return true;
+        }
+
+        static bool CheckForFlush(List<Card> combCards, Dictionary<Rank, int> entries)
+        {   
+            for (int i = 0; i < combCards.Count; i++)
+            {
+                Suit firstSuit = combCards[i].suit;
+                foreach (Card card in combCards)
+                {
+                    if (card.suit == firstSuit)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        static bool CheckForStraightFlush(List<Card> combCards, Dictionary<Rank, int> entries)
+        {
+            if (CheckForStraight(combCards, entries) && CheckForFlush(combCards, entries))
+            {
+                return true;
+
+            }
+            else
+                return false;
+        }
     }
 }
