@@ -78,10 +78,9 @@ namespace Task1
                 case "texas-holdem":
                     List<Card> board = ParseCards(tokens[1]);
                     List<List<Card>> hands = new List<List<Card>>();
-                    List<Card> newCards = new List<Card>();
                     for (int i = 2; i < tokens.Length; i++)
                     {
-                        newCards = ParseCards(tokens[i]);
+                        List<Card> newCards = ParseCards(tokens[i]);
                         hands.Add(newCards);
                     }
                     foreach (var hand in hands)
@@ -135,7 +134,7 @@ namespace Task1
             }
             maxHandValue.AddRange(cards);
             maxHandValue.AddRange(board);
-           bool kek = CheckForFlush(maxHandValue, entries);
+            bool kek = CheckForFlush(maxHandValue, entries);
             Console.Write("kek " + kek);
             return maxHandValue;
         }
@@ -180,7 +179,7 @@ namespace Task1
         return returnSuit;
         }
 
-        static bool CheckForStraight(List<Card> combCards, Dictionary<Rank, int> entries)
+        static bool CheckForStraight(List<Card> combCards)
         {
             int count = 0;
             for (int i = 0; i < combCards.Count; i++)
@@ -190,11 +189,11 @@ namespace Task1
                 {
                     if ((int)(combCards[i].Rank) < cardValue)
                     {
-                        count++;
-                        if (count == 5)
+                        if (count == 4)
                         {
                             return true;
                         }
+                        count++;
                     }
                 }
             }
@@ -205,12 +204,17 @@ namespace Task1
         {   
             for (int i = 0; i < combCards.Count; i++)
             {
+                int count = 0;
                 Suit firstSuit = combCards[i].suit;
                 foreach (Card card in combCards)
                 {
                     if (card.suit == firstSuit)
                     {
-                        return true;
+                        if (count == 4)
+                        {
+                            return true;
+                        }
+                        count++;
                     }
                 }
             }
@@ -219,7 +223,7 @@ namespace Task1
 
         static bool CheckForStraightFlush(List<Card> combCards, Dictionary<Rank, int> entries)
         {
-            if (CheckForStraight(combCards, entries) && CheckForFlush(combCards, entries))
+            if (CheckForStraight(combCards) && CheckForFlush(combCards, entries))
             {
                 return true;
 
