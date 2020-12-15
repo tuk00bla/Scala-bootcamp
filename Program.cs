@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Combinatorics.Collections;
 
 
 namespace Task1
@@ -112,30 +113,76 @@ namespace Task1
                 return handList;
         }
 
-        public static List<Card> FindHandValue(List<Card> cards, List<Card> board)
+        public static List<Card> FindHandValue(List<Card> hand, List<Card> board)
         {
-            Dictionary<Rank, int> entries = new Dictionary<Rank, int>();
+            Dictionary<Rank, int> entriesR = new Dictionary<Rank, int>();
+            Dictionary<Suit, int> entriesS = new Dictionary<Suit, int>();
             List<Card> maxHandValue = new List<Card>();
-            foreach (Card card in cards)
+            maxHandValue.AddRange(hand);
+            maxHandValue.AddRange(board);
+            Combinations<Card> combinations = new Combinations<Card>(maxHandValue, 5);
+            string cformat = "Combinations of cards choose 5: size = {0}";
+            Console.WriteLine(String.Format(cformat, combinations.Count));
+            /*  for (int i = 0; i < combinations.Count; i++)
+              {
+
+                  for (int j = 0; i < combinations[i].Count; j++)
+                  {      
+                            if (entriesR.ContainsKey(c[i].Rank))  //КОД НИЖИ НЕ ДОЛЖЕН РАБОТАТЬ С МАХХЭНДВЭЛЬЮ
+                            {
+                                entriesR[c[i].Rank] += 1;
+                            }
+                            else
+                            {
+                                entriesR.Add(c[i].Rank, 1);
+                            }
+                  }
+              }  */
+
+            foreach (IList<Card> c in combinations)
             {
-                if (entries.ContainsKey(card.Rank))
+                    Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", c[0].Rank, c[1].Rank, c[2].Rank, c[3].Rank, c[4].Rank));
+                    bool kek = CheckForFlush(c);
+                    bool cec = CheckForStraight(c);
+                    Console.WriteLine("kek " + kek);
+                    Console.WriteLine("cec " + cec);
+            }
+            
+            foreach (Card card in maxHandValue)
+            {
+                if (entriesR.ContainsKey(card.Rank))
                 {
-                    entries[card.Rank] += 1;
+                    entriesR[card.Rank] += 1;
                 }
                 else
                 {
-                    entries.Add(card.Rank, 1);
+                    entriesR.Add(card.Rank, 1);
                 }
             }
-            foreach (KeyValuePair<Rank, int> keyValue in entries)
+            foreach (Card card in maxHandValue)
             {
-                Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
-                Console.WriteLine((Rank)(keyValue.Key));
+                if (entriesS.ContainsKey(card.Suit))
+                {
+                    entriesS[card.Suit] += 1;
+                }
+                else
+                {
+                    entriesS.Add(card.Suit, 1);
+                }
             }
-            maxHandValue.AddRange(cards);
-            maxHandValue.AddRange(board);
-            bool kek = CheckForFlush(maxHandValue, entries);
-            Console.Write("kek " + kek);
+            foreach (KeyValuePair<Rank, int> keyValue in entriesR)
+                      {
+                          Console.WriteLine("RANKS");
+                          Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
+                          Console.WriteLine((Rank)(keyValue.Key));
+                     }
+
+            foreach (KeyValuePair<Suit, int> keyValue in entriesS)
+            {
+                Console.WriteLine("SUITS");
+                Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
+                Console.WriteLine((Suit)(keyValue.Key));
+            }
             return maxHandValue;
         }
 
@@ -179,7 +226,7 @@ namespace Task1
         return returnSuit;
         }
 
-        static bool CheckForStraight(List<Card> combCards)
+        static bool CheckForStraight(IList<Card> combCards)
         {
             int count = 0;
             for (int i = 0; i < combCards.Count; i++)
@@ -200,7 +247,7 @@ namespace Task1
             return false;
         }
 
-        static bool CheckForFlush(List<Card> combCards, Dictionary<Rank, int> entries)
+        static bool CheckForFlush(IList<Card> combCards)
         {   
             for (int i = 0; i < combCards.Count; i++)
             {
@@ -223,7 +270,7 @@ namespace Task1
 
         static bool CheckForStraightFlush(List<Card> combCards, Dictionary<Rank, int> entries)
         {
-            if (CheckForStraight(combCards) && CheckForFlush(combCards, entries))
+            if (CheckForStraight(combCards) && CheckForFlush(combCards) )
             {
                 return true;
 
