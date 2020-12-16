@@ -265,10 +265,23 @@ namespace Task1
         static bool IsStraight(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
            if (ranks.Count == 5)
-            {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
-                return true;
-            }
+           {
+                int comb = 1;
+                for (int count = 0; count < (ranks.Count - 1); count++)
+                {
+                    var element1 = ranks.ElementAt(count);
+                    var element2 = ranks.ElementAt(count + 1);
+                    if (element2.Key == (element1.Key + 1))
+                    {  
+                        if (comb == 5)
+                        {
+                            Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                            return true;
+                        }
+                        comb++;
+                    }
+                }
+           }
             return false;
         }
 
