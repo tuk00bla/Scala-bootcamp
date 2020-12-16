@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 using Combinatorics.Collections;
+using System.Linq;
 
 
 namespace Task1
 {
     public class Card
     {
-        public Rank rank;
+        private Rank rank;
         public Rank Rank
         {
             get { return rank; }
             set { rank = value; }
         }
 
-        public Suit suit;
+        private Suit suit;
         public Suit Suit
         {
             get { return suit; }
@@ -53,6 +54,19 @@ namespace Task1
         valueC,
         valueS,
    }
+
+   public enum Combination
+    {
+        HIGH_CARD,
+        PAIR,
+        TWO_PAIRS,
+        THREE_OF_A_KIND,
+        STRAIGHT,
+        FLUSH,
+        FULL_HOUSE,
+        FOUR_OF_A_KIND,
+        STRAIGHT_FLUSH
+    }
     class Program
     {
         static void Main(string[] args)
@@ -110,80 +124,102 @@ namespace Task1
                 Card newCard = new Card(ReturnRankEnum(hand[i]), ReturnSuitEnum(hand[i + 1]));
                 handList.Add(newCard);
             }
-                return handList;
+            return handList;
         }
 
-        public static List<Card> FindHandValue(List<Card> hand, List<Card> board)
+        public static Combination FindHandValue(List<Card> hand, List<Card> board)
         {
-            Dictionary<Rank, int> entriesR = new Dictionary<Rank, int>();
-            Dictionary<Suit, int> entriesS = new Dictionary<Suit, int>();
-            List<Card> maxHandValue = new List<Card>();
-            maxHandValue.AddRange(hand);
-            maxHandValue.AddRange(board);
-            Combinations<Card> combinations = new Combinations<Card>(maxHandValue, 5);
-            string cformat = "Combinations of cards choose 5: size = {0}";
-            Console.WriteLine(String.Format(cformat, combinations.Count));
-            /*  for (int i = 0; i < combinations.Count; i++)
-              {
+            List<Card> availableCards = new List<Card>();
+            availableCards.AddRange(hand);
+            availableCards.AddRange(board);
 
-                  for (int j = 0; i < combinations[i].Count; j++)
-                  {      
-                            if (entriesR.ContainsKey(c[i].Rank))  //КОД НИЖИ НЕ ДОЛЖЕН РАБОТАТЬ С МАХХЭНДВЭЛЬЮ
-                            {
-                                entriesR[c[i].Rank] += 1;
-                            }
-                            else
-                            {
-                                entriesR.Add(c[i].Rank, 1);
-                            }
-                  }
-              }  */
+            Combinations<Card> variants = new Combinations<Card>(availableCards, 5);
 
-            foreach (IList<Card> c in combinations)
+            List<Combination> combinations = new List<Combination>();
+            foreach (IList<Card> variant in variants)
             {
-                    Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", c[0].Rank, c[1].Rank, c[2].Rank, c[3].Rank, c[4].Rank));
-                    bool kek = CheckForFlush(c);
-                    bool cec = CheckForStraight(c);
-                    Console.WriteLine("kek " + kek);
-                    Console.WriteLine("cec " + cec);
+                Dictionary<Rank, int> rankGroups = GroupRanks(variant);
+                Dictionary<Suit, int> suitGroups = GroupSuits(variant);
+
+                combinations.Add(FindCombination(variant, rankGroups, suitGroups));
             }
-            
-            foreach (Card card in maxHandValue)
+            foreach (var cimbination in combinations)
             {
-                if (entriesR.ContainsKey(card.Rank))
+                Console.Write("Combination " + cimbination.ToString());
+            }
+
+            return combinations[0];
+        }
+
+       public static Combination FindCombination(IList<Card> cards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            if (IsStraightFlush(cards, ranks, suits))
+                { 
+                return Combination.STRAIGHT_FLUSH; 
+                }
+            else if (IsFourOfAKind(cards, ranks))
+                { 
+                return Combination.FOUR_OF_A_KIND; 
+                }
+            else if (IsFullHouse(cards, ranks, suits))
+                { 
+                return Combination.FULL_HOUSE; 
+                }
+            else if (IsFlush(cards, suits))
+                { 
+                return Combination.FLUSH; 
+                }
+            else if (IsStraight(cards, ranks))
+                { 
+                return Combination.STRAIGHT; 
+                }
+            else if (IsThreeOfAKind(cards, ranks))
+                { 
+                return Combination.THREE_OF_A_KIND; 
+                }
+            else if (IsTwoPairs(cards, ranks))
+                { 
+                return Combination.TWO_PAIRS; 
+                }
+            else if (IsPair(cards, ranks))
+                { 
+                return Combination.PAIR; 
+                }
+            else return Combination.HIGH_CARD;
+        }
+
+        static Dictionary<Rank, int> GroupRanks(IList<Card> cards)
+        {
+            Dictionary<Rank, int> entries = new Dictionary<Rank, int>();
+            foreach (Card card in cards)
+            {
+                if (entries.ContainsKey(card.Rank))
                 {
-                    entriesR[card.Rank] += 1;
+                    entries[card.Rank] += 1;
                 }
                 else
                 {
-                    entriesR.Add(card.Rank, 1);
+                    entries.Add(card.Rank, 1);
                 }
             }
-            foreach (Card card in maxHandValue)
+            return entries;
+        }
+
+        static Dictionary<Suit, int> GroupSuits(IList<Card> cards)
+        {
+            Dictionary<Suit, int> entries = new Dictionary<Suit, int>();
+            foreach (Card card in cards)
             {
-                if (entriesS.ContainsKey(card.Suit))
+                if (entries.ContainsKey(card.Suit))
                 {
-                    entriesS[card.Suit] += 1;
+                    entries[card.Suit] += 1;
                 }
                 else
                 {
-                    entriesS.Add(card.Suit, 1);
+                    entries.Add(card.Suit, 1);
                 }
             }
-            foreach (KeyValuePair<Rank, int> keyValue in entriesR)
-                      {
-                          Console.WriteLine("RANKS");
-                          Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
-                          Console.WriteLine((Rank)(keyValue.Key));
-                     }
-
-            foreach (KeyValuePair<Suit, int> keyValue in entriesS)
-            {
-                Console.WriteLine("SUITS");
-                Console.WriteLine(keyValue.Key + " - " + keyValue.Value);
-                Console.WriteLine((Suit)(keyValue.Key));
-            }
-            return maxHandValue;
+            return entries;
         }
 
         static Rank ReturnRankEnum(char rank)
@@ -226,51 +262,29 @@ namespace Task1
         return returnSuit;
         }
 
-        static bool CheckForStraight(IList<Card> combCards)
+        static bool IsStraight(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
-            int count = 0;
-            for (int i = 0; i < combCards.Count; i++)
+           if (ranks.Count == 5)
             {
-                int cardValue = (int)(combCards[i+1].Rank);
-                foreach (Card card in combCards)
-                {
-                    if ((int)(combCards[i].Rank) < cardValue)
-                    {
-                        if (count == 4)
-                        {
-                            return true;
-                        }
-                        count++;
-                    }
-                }
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                return true;
             }
             return false;
         }
 
-        static bool CheckForFlush(IList<Card> combCards)
-        {   
-            for (int i = 0; i < combCards.Count; i++)
+        static bool IsFlush(IList<Card> combCards, Dictionary<Suit, int> suits)
+        {
+            if(suits.ContainsValue(5))
             {
-                int count = 0;
-                Suit firstSuit = combCards[i].suit;
-                foreach (Card card in combCards)
-                {
-                    if (card.suit == firstSuit)
-                    {
-                        if (count == 4)
-                        {
-                            return true;
-                        }
-                        count++;
-                    }
-                }
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Suit, combCards[1].Suit, combCards[2].Suit, combCards[3].Suit, combCards[4].Suit));
+                return true;
             }
             return false;
         }
 
-        static bool CheckForStraightFlush(List<Card> combCards, Dictionary<Rank, int> entries)
+        static bool IsStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-            if (CheckForStraight(combCards) && CheckForFlush(combCards) )
+            if (IsStraight(combCards, ranks) && IsFlush(combCards, suits) )
             {
                 return true;
 
@@ -278,5 +292,46 @@ namespace Task1
             else
                 return false;
         }
+
+        static bool IsFourOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
+        {
+            if (ranks.ContainsValue(4))
+            {
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                return true;
+            }
+            return false;
+        }
+
+        static bool IsFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            return false;
+        }
+
+        static bool IsThreeOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
+        {
+            if (ranks.ContainsValue(3))
+            {
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                return true;
+            }
+            return false;
+        }
+
+        static bool IsTwoPairs(IList<Card> combCards, Dictionary<Rank, int> ranks)
+        {
+            return false;
+        }
+
+        static bool IsPair(IList<Card> combCards, Dictionary<Rank, int> ranks)
+        {
+            if (ranks.ContainsValue(2))
+            {
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                return true;
+            }
+            return false;
+        }
+
     }
 }
