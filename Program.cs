@@ -143,9 +143,9 @@ namespace Task1
 
                 combinations.Add(FindCombination(variant, rankGroups, suitGroups));
             }
-            foreach (var cimbination in combinations)
+            foreach (var combination in combinations)
             {
-                Console.Write("Combination " + cimbination.ToString());
+                Console.Write("Combination " + combination.ToString());
             }
 
             return combinations[0];
@@ -299,8 +299,8 @@ namespace Task1
         {
             if (IsStraight(combCards, ranks) && IsFlush(combCards, suits) )
             {
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
                 return true;
-
             }
             else
                 return false;
@@ -318,6 +318,11 @@ namespace Task1
 
         static bool IsFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
+            if (ranks.Count == 2 && (ranks.ContainsValue(2) && ranks.ContainsValue(3)))
+            {
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                return true;
+            }
             return false;
         }
 
@@ -333,6 +338,11 @@ namespace Task1
 
         static bool IsTwoPairs(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
+            if (ranks.Count == 3 && ranks.ContainsValue(2))
+            {
+                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                return true;
+            }
             return false;
         }
 
