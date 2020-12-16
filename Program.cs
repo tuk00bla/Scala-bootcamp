@@ -9,80 +9,79 @@ namespace Task1
 {
     public class Card
     {
-        private Rank rank;
+        private Rank _rank;
         public Rank Rank
         {
-            get { return rank; }
-            set { rank = value; }
+            get { return _rank; }
+            set { _rank = value; }
         }
 
-        private Suit suit;
+        private Suit _suit;
         public Suit Suit
         {
-            get { return suit; }
-            set { suit = value; }
+            get { return _suit; }
+            set { _suit = value; }
         }
 
         public Card(Rank r, Suit s)
         {
-            this.rank = r;
-            this.suit = s;
+            this._rank = r;
+            this._suit = s;
         }
     }
     
   public  enum Rank
   {
-       value2,
-       value3,
-       value4,
-       value5,
-       value6,
-       value7,
-       value8,
-       value9,
-       valueT,
-       valueJ,
-       valueQ, 
-       valueK, 
-       valueA 
+       Value2,
+       Value3,
+       Value4,
+       Value5,
+       Value6,
+       Value7,
+       Value8,
+       Value9,
+       ValueT,
+       ValueJ,
+       ValueQ, 
+       ValueK, 
+       ValueA 
   }
 
    public enum Suit
    {
-        valueH,
-        valueD,
-        valueC,
-        valueS,
+        ValueH,
+        ValueD,
+        ValueC,
+        ValueS,
    }
 
    public enum Combination
     {
-        HIGH_CARD,
-        PAIR,
-        TWO_PAIRS,
-        THREE_OF_A_KIND,
-        STRAIGHT,
-        FLUSH,
-        FULL_HOUSE,
-        FOUR_OF_A_KIND,
-        STRAIGHT_FLUSH
+        HighCard,
+        Pair,
+        TwoPair,
+        ThreeOfAKind,
+        Straight,
+        Flush,
+        FullHouse,
+        FourOfAKind,
+        StraightFLush
     }
-    class Program
+
+   static class Program
     {
         static void Main(string[] args)
         {
-            string enter;
             Console.WriteLine("Please enter a string:");
-            enter = Console.ReadLine();
+            string enter = Console.ReadLine();
             CheckEnter(enter);
             Console.WriteLine(enter);
             Console.ReadKey();
         }
 
-        static string CheckEnter(string checkedString)
+        private static string CheckEnter(string checkedString)
         {
-            string[] tokens;
-            tokens = checkedString.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            var tokens = checkedString.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in tokens)
             {
                 Console.Write("'{0}' ", s);
@@ -116,7 +115,7 @@ namespace Task1
             return checkedString;
         }
 
-        public static List<Card> ParseCards(string hand)
+        private static List<Card> ParseCards(string hand)
         {
             List<Card> handList = new List<Card>();
             for (int i = 0; i < hand.Length; i += 2)
@@ -127,7 +126,7 @@ namespace Task1
             return handList;
         }
 
-        public static Combination FindHandValue(List<Card> hand, List<Card> board)
+        private static Combination FindHandValue(List<Card> hand, List<Card> board)
         {
             List<Card> availableCards = new List<Card>();
             availableCards.AddRange(hand);
@@ -138,54 +137,27 @@ namespace Task1
             List<Combination> combinations = new List<Combination>();
             foreach (IList<Card> variant in variants)
             {
+
                 Dictionary<Rank, int> rankGroups = GroupRanks(variant);
                 Dictionary<Suit, int> suitGroups = GroupSuits(variant);
 
                 combinations.Add(FindCombination(variant, rankGroups, suitGroups));
             }
-            foreach (var combination in combinations)
-            {
-                Console.Write("Combination " + combination.ToString());
-            }
-
-            return combinations[0];
+                Console.WriteLine("Combination " + combinations.Max().ToString());
+            return combinations.Max();
         }
 
-       public static Combination FindCombination(IList<Card> cards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        private static Combination FindCombination(IList<Card> cards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-            if (IsStraightFlush(cards, ranks, suits))
-                { 
-                return Combination.STRAIGHT_FLUSH; 
-                }
-            else if (IsFourOfAKind(cards, ranks))
-                { 
-                return Combination.FOUR_OF_A_KIND; 
-                }
-            else if (IsFullHouse(cards, ranks, suits))
-                { 
-                return Combination.FULL_HOUSE; 
-                }
-            else if (IsFlush(cards, suits))
-                { 
-                return Combination.FLUSH; 
-                }
-            else if (IsStraight(cards, ranks))
-                { 
-                return Combination.STRAIGHT; 
-                }
-            else if (IsThreeOfAKind(cards, ranks))
-                { 
-                return Combination.THREE_OF_A_KIND; 
-                }
-            else if (IsTwoPairs(cards, ranks))
-                { 
-                return Combination.TWO_PAIRS; 
-                }
-            else if (IsPair(cards, ranks))
-                { 
-                return Combination.PAIR; 
-                }
-            else return Combination.HIGH_CARD;
+            if (IsStraightFlush(cards, ranks, suits)) { return Combination.StraightFLush; }
+            else if (IsFourOfAKind(cards, ranks)) { return Combination.FourOfAKind; }
+            else if (IsFullHouse(cards, ranks, suits)) { return Combination.FullHouse; }
+            else if (IsFlush(cards, suits)) { return Combination.Flush; }
+            else if (IsStraight(cards, ranks)) { return Combination.Straight; }
+            else if (IsThreeOfAKind(cards, ranks)) { return Combination.ThreeOfAKind;}
+            else if (IsTwoPairs(cards, ranks)) { return Combination.TwoPair; }
+            else if (IsPair(cards, ranks)) { return Combination.Pair; }
+            else return Combination.HighCard;
         }
 
         static Dictionary<Rank, int> GroupRanks(IList<Card> cards)
@@ -224,9 +196,9 @@ namespace Task1
 
         static Rank ReturnRankEnum(char rank)
         {
-           Rank returnRank = Rank.value2;
-           char[] charArray = { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
-           int indexOfRank = Array.IndexOf(charArray, rank);
+            Rank returnRank = Rank.Value2;
+            char[] charArray = { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
+            int indexOfRank = Array.IndexOf(charArray, rank);
 
             foreach (int i in Enum.GetValues(typeof(Rank)))
             {
@@ -235,26 +207,25 @@ namespace Task1
                     returnRank = (Rank)i;
                 }
             }
-
-                return returnRank;
+            return returnRank;
         }
 
         static Suit ReturnSuitEnum(char suit)
         {
-            Suit returnSuit = Suit.valueC;
+            Suit returnSuit = Suit.ValueC;
             switch (suit)
             {
                 case 'h':
-                    returnSuit = Suit.valueH;
+                    returnSuit = Suit.ValueH;
                     break;
                 case 'd':
-                    returnSuit = Suit.valueD;
+                    returnSuit = Suit.ValueD;
                     break;
                 case 'c':
-                    returnSuit = Suit.valueC;
+                    returnSuit = Suit.ValueC;
                     break;
                 case 's':
-                    returnSuit = Suit.valueS;
+                    returnSuit = Suit.ValueS;
                     break;
                 default:
                     break;
@@ -264,24 +235,26 @@ namespace Task1
 
         static bool IsStraight(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
-           if (ranks.Count == 5)
-           {
+            if (ranks.Count == 5)
+            {
                 int comb = 1;
                 for (int count = 0; count < (ranks.Count - 1); count++)
                 {
                     var element1 = ranks.ElementAt(count);
                     var element2 = ranks.ElementAt(count + 1);
                     if (element2.Key == (element1.Key + 1))
-                    {  
+                    {
                         if (comb == 5)
                         {
-                            Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                            Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank,
+                                combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
                             return true;
                         }
+
                         comb++;
                     }
                 }
-           }
+            } 
             return false;
         }
 
@@ -289,7 +262,7 @@ namespace Task1
         {
             if(suits.ContainsValue(5))
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Suit, combCards[1].Suit, combCards[2].Suit, combCards[3].Suit, combCards[4].Suit));
+                Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
                 return true;
             }
             return false;
@@ -299,7 +272,7 @@ namespace Task1
         {
             if (IsStraight(combCards, ranks) && IsFlush(combCards, suits) )
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             else
@@ -310,7 +283,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(4))
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -320,7 +293,7 @@ namespace Task1
         {
             if (ranks.Count == 2 && (ranks.ContainsValue(2) && ranks.ContainsValue(3)))
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -330,7 +303,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(3))
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -340,7 +313,7 @@ namespace Task1
         {
             if (ranks.Count == 3 && ranks.ContainsValue(2))
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -350,7 +323,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(2))
             {
-                Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank, combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
+                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
