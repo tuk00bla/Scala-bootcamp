@@ -5,6 +5,7 @@ using Combinatorics.Collections;
 using System.Linq;
 
 
+
 namespace Task1
 {
     public class Card
@@ -28,9 +29,69 @@ namespace Task1
             this._rank = r;
             this._suit = s;
         }
+
+        public override string ToString()
+        {
+            return RanksToString(Rank) + SuitToString(Suit).ToString();
+        }
+
+        public static char SuitToString(Suit s)
+        {
+            switch (s)
+            {
+                case Suit.ValueH:
+                    return 'h';
+                case Suit.ValueD:
+                    return 'd';
+                case Suit.ValueC:
+                    return 'c';
+                case Suit.ValueS:
+                    return 's';
+                default:
+                    return 'g';
+            }
+
+        }
+
+        public static char RanksToString(Rank s)
+        {
+            switch (s)
+            {
+                case Rank.Value2:
+                    return '2';
+                case Rank.Value3:
+                    return '3';
+                case Rank.Value4:
+                    return '4';
+                case Rank.Value5:
+                    return '5';
+                case Rank.Value6:
+                    return '6';
+                case Rank.Value7:
+                    return '7';
+                case Rank.Value8:
+                    return '8';
+                case Rank.Value9:
+                    return '9';
+                case Rank.ValueT:
+                    return 'T';
+                case Rank.ValueJ:
+                    return 'J';
+                case Rank.ValueQ:
+                    return 'Q';
+                case Rank.ValueK:
+                    return 'K';
+                case Rank.ValueA:
+                    return 'A';
+                default:
+                    return 'g';
+            }
+
+        }
+
     }
-    
-  public  enum Rank
+
+    public  enum Rank
   {
        Value2,
        Value3,
@@ -45,6 +106,8 @@ namespace Task1
        ValueQ, 
        ValueK, 
        ValueA 
+
+        
   }
 
    public enum Suit
@@ -68,7 +131,10 @@ namespace Task1
         StraightFLush
     }
 
-   static class Program
+
+    
+
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -101,6 +167,7 @@ namespace Task1
                     {
                         FindHandValue(hand, board);
                     }
+
                     break;
                 case "omaha-holdem":
 
@@ -140,10 +207,14 @@ namespace Task1
 
                 Dictionary<Rank, int> rankGroups = GroupRanks(variant);
                 Dictionary<Suit, int> suitGroups = GroupSuits(variant);
-
+                Combination comb = FindCombination(variant, rankGroups, suitGroups);
                 combinations.Add(FindCombination(variant, rankGroups, suitGroups));
+                Console.WriteLine(String.Join("; ", variant));
+                Console.WriteLine(comb);
             }
-                Console.WriteLine("Combination " + combinations.Max().ToString());
+
+            Console.WriteLine("Combination " + combinations.Max().ToString());
+
             return combinations.Max();
         }
 
@@ -237,23 +308,19 @@ namespace Task1
         {
             if (ranks.Count == 5)
             {
-                int comb = 1;
-                for (int count = 0; count < (ranks.Count - 1); count++)
+                List<Rank> sortedRanks = ranks.Keys.ToList();
+                sortedRanks.Sort();
+               
+                for (int count = 0; count < (sortedRanks.Count - 1); count++)
                 {
-                    var element1 = ranks.ElementAt(count);
-                    var element2 = ranks.ElementAt(count + 1);
-                    if (element2.Key == (element1.Key + 1))
+                    var element1 = sortedRanks[count];
+                    var element2 = sortedRanks[count + 1];
+                    if (element2 != element1 + 1)
                     {
-                        if (comb == 5)
-                        {
-                            Console.WriteLine(String.Format("{{{0} {1} {2} {3} {4}}}", combCards[0].Rank,
-                                combCards[1].Rank, combCards[2].Rank, combCards[3].Rank, combCards[4].Rank));
-                            return true;
-                        }
-
-                        comb++;
+                        return false;
                     }
                 }
+                return true;
             } 
             return false;
         }
@@ -262,7 +329,7 @@ namespace Task1
         {
             if(suits.ContainsValue(5))
             {
-                Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
+             //   Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
                 return true;
             }
             return false;
@@ -272,7 +339,7 @@ namespace Task1
         {
             if (IsStraight(combCards, ranks) && IsFlush(combCards, suits) )
             {
-                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+             //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             else
@@ -283,7 +350,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(4))
             {
-                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+             //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -293,7 +360,7 @@ namespace Task1
         {
             if (ranks.Count == 2 && (ranks.ContainsValue(2) && ranks.ContainsValue(3)))
             {
-                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+             //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -303,7 +370,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(3))
             {
-                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+              //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -313,7 +380,7 @@ namespace Task1
         {
             if (ranks.Count == 3 && ranks.ContainsValue(2))
             {
-                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+              //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -323,11 +390,30 @@ namespace Task1
         {
             if (ranks.ContainsValue(2))
             {
-                Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+               // Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
         }
+
+      /*  public static char RankToString(Rank r)
+        {
+            switch (r)
+            {
+                case Suit.ValueH:
+                    return 'h';
+                case Suit.ValueD:
+                    return 'd';
+                case Suit.ValueC:
+                    return 'c';
+                case Suit.ValueS:
+                    return 's';
+                default:
+                    return 'g';
+            }
+        } */
+
+     
 
     }
 }
