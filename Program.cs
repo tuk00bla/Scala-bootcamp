@@ -608,54 +608,61 @@ namespace Task1
 
         }
 
-
-
-     /*  public static ICombination SortHands(List <Combination> comb)
+        public class CombinationComparer : IComparer<Combination>
         {
-            foreach (var c in comb)
+            public int Compare(Combination x, Combination y)
             {
-                switch (c)
-                {
-                    case Combination.StraightFLush:
-                        return new StraightFlush(c,);
-                    case Combination.FourOfAKind:
-                        return new FourOfAKind();
-                    case Combination.FullHouse:
-                        return new FullHouse();
-                    case Combination.Flush:
-                        return new Flush();
-                    case Combination.Straight:
-                        return new Straight();
-                    case Combination.ThreeOfAKind:
-                        return new ThreeOfAKind();
-                    case Combination.TwoPair:
-                        return new TwoPair();
-                    case Combination.Pair:
-                        return new Pair();
-                    default:
-                        Console.WriteLine("Not found");
-                        break;
-                }
+                // TODO: Handle x or y being null, or them not having names
+                return x.CompareTo(y);
             }
-            return new HighCard();
         }
 
-        public static char RankToString(Rank r)
-          {
-              switch (r)
-              {
-                  case Suit.ValueH:
-                      return 'h';
-                  case Suit.ValueD:
-                      return 'd';
-                  case Suit.ValueC:
-                      return 'c';
-                  case Suit.ValueS:
-                      return 's';
-                  default:
-                      return 'g';
-              }
-          } */
+        /*  public static ICombination SortHands(List <Combination> comb)
+           {
+               foreach (var c in comb)
+               {
+                   switch (c)
+                   {
+                       case Combination.StraightFLush:
+                           return new StraightFlush(c,);
+                       case Combination.FourOfAKind:
+                           return new FourOfAKind();
+                       case Combination.FullHouse:
+                           return new FullHouse();
+                       case Combination.Flush:
+                           return new Flush();
+                       case Combination.Straight:
+                           return new Straight();
+                       case Combination.ThreeOfAKind:
+                           return new ThreeOfAKind();
+                       case Combination.TwoPair:
+                           return new TwoPair();
+                       case Combination.Pair:
+                           return new Pair();
+                       default:
+                           Console.WriteLine("Not found");
+                           break;
+                   }
+               }
+               return new HighCard();
+           }
+
+           public static char RankToString(Rank r)
+             {
+                 switch (r)
+                 {
+                     case Suit.ValueH:
+                         return 'h';
+                     case Suit.ValueD:
+                         return 'd';
+                     case Suit.ValueC:
+                         return 'c';
+                     case Suit.ValueS:
+                         return 's';
+                     default:
+                         return 'g';
+                 }
+             } */
 
 
 
