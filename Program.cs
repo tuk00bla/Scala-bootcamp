@@ -391,7 +391,7 @@ namespace Task1
             {
                 List<Rank> sortedRanks = ranks.Keys.ToList();
                 sortedRanks.Sort();
-
+                List<Rank> Astraight = new List<Rank>() {Rank.Value2, Rank.Value3, Rank.Value4, Rank.Value5, Rank.ValueA};
                 for (int count = 0; count < (sortedRanks.Count - 1); count++)
                 {
                     var element1 = sortedRanks[count];
@@ -399,6 +399,10 @@ namespace Task1
                     if (element2 != element1 + 1)
                     {
                         return false;
+                    }
+                    if (Enumerable.SequenceEqual(sortedRanks, Astraight))
+                    {
+                        return true;
                     }
                 }
                 return true;
@@ -409,6 +413,16 @@ namespace Task1
         static Straight MakeStraight(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
             Rank highCard = ranks.Keys.Max();
+            List<Rank> sortedRanks = ranks.Keys.ToList();
+            sortedRanks.Sort();
+            List<Rank> Astraight = new List<Rank>() {Rank.Value2, Rank.Value3, Rank.Value4, Rank.Value5, Rank.ValueA};
+            
+            if(Enumerable.SequenceEqual(sortedRanks, Astraight))
+            {
+                sortedRanks.Remove(highCard);
+                sortedRanks.Sort();
+                highCard = sortedRanks.Max();
+            }
             return new Straight(highCard);
 
         }
