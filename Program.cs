@@ -358,7 +358,6 @@ namespace Task1
         {
             Rank highPair = Rank.Value2; // Use unassigment variable
             Rank lowPair = Rank.Value2;
-            Rank kicker = Rank.Value2;
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
                 if (entry.Value == 3)
@@ -366,7 +365,7 @@ namespace Task1
                 if (entry.Value == 2)
                 {  lowPair = entry.Key; }
             }
-            return new FullHouse(highPair, lowPair, kicker); 
+            return new FullHouse(highPair, lowPair); 
 
         }
 
@@ -428,12 +427,17 @@ namespace Task1
         {
             Rank highCard = Rank.Value2; // Use unassigment variable
             Rank kicker = Rank.Value2;
+    
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
                 if (entry.Value == 3)
-                { highCard = entry.Key; }
-                if (entry.Value == 1)
-                { kicker = entry.Key; }
+                { 
+                    highCard = entry.Key;
+                    List<Rank> sortedRanks = ranks.Keys.ToList();
+                    sortedRanks.Remove(entry.Key);
+                    sortedRanks.Sort();
+                    kicker = sortedRanks.Max();
+                }
             }
              return new ThreeOfAKind(highCard, kicker); 
 
@@ -454,10 +458,17 @@ namespace Task1
             Rank highPair = Rank.Value2; // Use unassigment variable
             Rank lowPair = Rank.Value2;
             Rank kicker = Rank.Value2;
+
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
-               if (entry.Value == 2 && entry.Key > (entry.Key+1)) //HYETA KAKAYATo
-                { highPair = entry.Key; }
+                List<Rank> highPairs = new List<Rank>();
+                if (entry.Value == 2) 
+                {
+                    highPairs.Add(entry.Key);
+                    highPairs.Sort();
+                    highPair = highPairs.Max();
+                    lowPair = highPairs.Min();                 
+                }
                 if (entry.Value == 1)
                 { kicker = entry.Key; }
             }
@@ -482,9 +493,12 @@ namespace Task1
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
                 if (entry.Value == 2)
-                { highCard = entry.Key; }
-                if (entry.Value == 1)
-                { kicker = entry.Key; }
+                {   highCard = entry.Key;
+                    List<Rank> sortedRanks = ranks.Keys.ToList();
+                    sortedRanks.Remove(entry.Key);
+                    sortedRanks.Sort();
+                    kicker = sortedRanks.Max();
+                }
             }
             return new Pair(highCard, kicker);
 
@@ -497,10 +511,10 @@ namespace Task1
 
         }
        
-        public interface ICombination
+        public interface ICombination : IComparable
         {}
 
-        public class StraightFlush : ICombination
+        public class StraightFlush : ICombination, IComparable
         {
             public Rank HighCard { get; }
 
@@ -509,24 +523,36 @@ namespace Task1
                 this.HighCard = r;
             }
 
+            public int CompareTo(object obj)
+            { return 0; }
+            public override string ToString()
+            {
+                return "STRAIGHT FLUSH: RANK -> " + this.HighCard;
+            }
         }
 
-        public class  FullHouse: ICombination
+        public class  FullHouse: ICombination, IComparable
         {
            public Rank TwoCard { get; }
            public Rank ThreeCard { get; }
-           public Rank Kicker { get; }
 
-           public FullHouse(Rank th, Rank tw, Rank k)
+           public FullHouse(Rank th, Rank tw)
            {
                 this.ThreeCard = th;
                 this.TwoCard = tw;
-                this.Kicker = Kicker;
            }
+
+            public int CompareTo(object obj)
+            { return 0; }
+
+            public override string ToString()
+            {
+                return "FULL HOUSE: THREE CARD -> " + this.ThreeCard +  "TWO CARD ->" + this.TwoCard;
+            }
 
         }
 
-        public class Straight : ICombination
+        public class Straight : ICombination, IComparable
         {
            public Rank Rank { get; }
 
@@ -534,11 +560,19 @@ namespace Task1
             {
                 this.Rank = r;
             }
+
+            public int CompareTo(object obj)
+            { return 0; }
+
+            public override string ToString()
+            {
+                return "STRAIGHT: RANK -> " + this.Rank;
+            }
         }
 
 
 
-        public class Flush : ICombination
+        public class Flush : ICombination, IComparable
         {
             public Rank Rank { get; }
 
@@ -546,9 +580,17 @@ namespace Task1
             {
                 this.Rank = r;
             }
+
+            public int CompareTo(object obj)
+            { return 0; }
+
+            public override string ToString()
+            {
+                return "FLUSH: RANK -> " + this.Rank;
+            }
         }
 
-        public class FourOfAKind : ICombination
+        public class FourOfAKind : ICombination, IComparable
         {
             public Rank HighCard { get; }
             public Rank Kicker { get; }
@@ -558,9 +600,17 @@ namespace Task1
                 this.HighCard = r;
                 this.Kicker = k;
             }
+
+            public int CompareTo(object obj)
+            { return 0; }
+
+            public override string ToString()
+            {
+                return "FOUR OF A KIND: RANK -> " + this.HighCard + " KICKER -> " + this.Kicker;
+            }
         }
 
-        public class ThreeOfAKind : ICombination
+        public class ThreeOfAKind : ICombination, IComparable
         {
             public Rank HighCard { get; }
             public Rank Kicker { get; }
@@ -570,9 +620,17 @@ namespace Task1
                 this.HighCard = r;
                 this.Kicker = k;
             }
+
+            public int CompareTo(object obj)
+            { return 0; }
+
+            public override string ToString()
+            {
+                return "THREE OF A KIND: RANK -> " + this.HighCard + " KICKER -> " + this.Kicker;
+            }
         }
 
-        public class TwoPairs : ICombination
+        public class TwoPairs : ICombination, IComparable
         {
             public Rank HighPair { get; }
             public Rank LowPair { get; }
@@ -584,9 +642,16 @@ namespace Task1
                 this.LowPair = lp;
                 this.Kicker = k; 
             }
+
+            public int CompareTo(object obj)
+            { return 0; }
+            public override string ToString()
+            {
+                return "TWO PAIRS: HIGH PAIR -> " + this.HighPair + " LOW PAIR -> " + this.LowPair + "KICKER -> " + this.Kicker;
+            }
         }
 
-        public class Pair : ICombination
+        public class Pair : ICombination, IComparable
         {
             public Rank HighPair { get; }
             public Rank Kicker { get; }
@@ -595,15 +660,28 @@ namespace Task1
                 this.HighPair = hp;
                 this.Kicker = k;
             }
+            public int CompareTo(object obj)
+            { return 0; }
 
+            public override string ToString()
+            {
+                return "PAIR: PAIR RANK -> " + this.HighPair + " KICKER -> " + this.Kicker;
+            }
         }
 
-        public class HighCard : ICombination
+        public class HighCard : ICombination, IComparable
         {
             public Rank Kicker { get; }
             public HighCard(Rank r)
             {
                 this.Kicker = r;
+            }
+
+            public int CompareTo(object obj)
+            { return 0; }
+            public override string ToString()
+            {
+                return "HIGH CARD -> " + this.Kicker;
             }
 
         }
