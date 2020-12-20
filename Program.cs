@@ -194,7 +194,7 @@ namespace Task1
             return handList;
         }
 
-        private static Combination FindHandValue(List<Card> hand, List<Card> board)
+        private static ICombination FindHandValue(List<Card> hand, List<Card> board)
         {
             List<Card> availableCards = new List<Card>();
             availableCards.AddRange(hand);
@@ -202,34 +202,33 @@ namespace Task1
 
             Combinations<Card> variants = new Combinations<Card>(availableCards, 5);
 
-            List<Combination> combinations = new List<Combination>();
+            List<ICombination> combinations = new List<ICombination>();
             foreach (IList<Card> variant in variants)
             {
 
                 Dictionary<Rank, int> rankGroups = GroupRanks(variant);
                 Dictionary<Suit, int> suitGroups = GroupSuits(variant);
-                Combination comb = FindCombination(variant, rankGroups, suitGroups);
+                ICombination comb = FindCombination(variant, rankGroups, suitGroups);
                 combinations.Add(FindCombination(variant, rankGroups, suitGroups));
                 Console.WriteLine(String.Join("; ", variant));
                 Console.WriteLine(comb);
             }
 
             Console.WriteLine("Combination " + combinations.Max().ToString());
-
             return combinations.Max();
         }
 
-        private static Combination FindCombination(IList<Card> cards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        private static ICombination FindCombination(IList<Card> cards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-            if (IsStraightFlush(cards, ranks, suits)) { return Combination.StraightFLush; }
-            else if (IsFourOfAKind(cards, ranks)) { return Combination.FourOfAKind; }
-            else if (IsFullHouse(cards, ranks, suits)) { return Combination.FullHouse; }
-            else if (IsFlush(cards, suits)) { return Combination.Flush; }
-            else if (IsStraight(cards, ranks)) { return Combination.Straight; }
-            else if (IsThreeOfAKind(cards, ranks)) { return Combination.ThreeOfAKind; }
-            else if (IsTwoPairs(cards, ranks)) { return Combination.TwoPair; }
-            else if (IsPair(cards, ranks)) { return Combination.Pair; }
-            else return Combination.HighCard;
+            if (IsStraightFlush(cards, ranks, suits)) { return MakeStraightFlush(cards, ranks, suits); }
+            else if (IsFourOfAKind(cards, ranks)) { return MakeFourOfAKind(cards, ranks); }
+            else if (IsFullHouse(cards, ranks, suits)) { return MakeFullHouse(cards, ranks, suits); }
+            else if (IsFlush(cards, suits)) { return MakeFlush(cards, ranks, suits); }
+            else if (IsStraight(cards, ranks)) { return MakeStraight(cards, ranks, suits); }
+            else if (IsThreeOfAKind(cards, ranks)) { return MakeThreeOfAKind(cards, ranks, suits); }
+            else if (IsTwoPairs(cards, ranks)) { return MakeTwoPairs(cards, ranks, suits); }
+            else if (IsPair(cards, ranks)) { return MakePair(cards, ranks, suits); }
+            else return MakeHighCard(cards, ranks, suits) ;
         }
 
         static Dictionary<Rank, int> GroupRanks(IList<Card> cards)
@@ -304,6 +303,88 @@ namespace Task1
             }
             return returnSuit;
         }
+        static bool IsStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            if (IsStraight(combCards, ranks) && IsFlush(combCards, suits))
+            {
+                //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                return true;
+            }
+            else
+                return false;
+        }
+        static StraightFlush MakeStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+           Rank highCard = ranks.Keys.Max();
+           return new StraightFlush(highCard);
+            
+        }
+
+        static bool IsFourOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
+        {
+            if (ranks.ContainsValue(4))
+            {
+                //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                return true;
+            }
+            return false;
+        }
+
+        static FourOfAKind MakeFourOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
+        {
+            Rank highCard = Rank.Value2; // Use unassigment variable
+            Rank kicker = Rank.Value2;
+            foreach (KeyValuePair<Rank, int> entry in ranks)
+            {
+                if (entry.Value == 4)
+                { highCard = entry.Key; }
+                if (entry.Value == 1)
+                { kicker = entry.Key; }
+            }
+            return new FourOfAKind(highCard, kicker);
+        }
+
+        static bool IsFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            if (ranks.Count == 2 && (ranks.ContainsValue(2) && ranks.ContainsValue(3)))
+            {
+                //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                return true;
+            }
+            return false;
+        }
+
+        static FullHouse MakeFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            Rank highPair = Rank.Value2; // Use unassigment variable
+            Rank lowPair = Rank.Value2;
+            Rank kicker = Rank.Value2;
+            foreach (KeyValuePair<Rank, int> entry in ranks)
+            {
+                if (entry.Value == 3)
+                { highPair = entry.Key; }
+                if (entry.Value == 2)
+                {  lowPair = entry.Key; }
+            }
+            return new FullHouse(highPair, lowPair, kicker); 
+
+        }
+
+        static bool IsFlush(IList<Card> combCards, Dictionary<Suit, int> suits)
+        {
+            if (suits.ContainsValue(5))
+            {
+                //   Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
+                return true;
+            }
+            return false;
+        }
+
+        static Flush MakeFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            Rank highCard = ranks.Keys.Max();
+            return new Flush(highCard);
+        }
 
         static bool IsStraight(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
@@ -326,45 +407,11 @@ namespace Task1
             return false;
         }
 
-        static bool IsFlush(IList<Card> combCards, Dictionary<Suit, int> suits)
+        static Straight MakeStraight(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-            if (suits.ContainsValue(5))
-            {
-                //   Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
-                return true;
-            }
-            return false;
-        }
+            Rank highCard = ranks.Keys.Max();
+            return new Straight(highCard);
 
-        static bool IsStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
-        {
-            if (IsStraight(combCards, ranks) && IsFlush(combCards, suits))
-            {
-                //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
-                return true;
-            }
-            else
-                return false;
-        }
-
-        static bool IsFourOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
-        {
-            if (ranks.ContainsValue(4))
-            {
-                //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
-                return true;
-            }
-            return false;
-        }
-
-        static bool IsFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
-        {
-            if (ranks.Count == 2 && (ranks.ContainsValue(2) && ranks.ContainsValue(3)))
-            {
-                //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
-                return true;
-            }
-            return false;
         }
 
         static bool IsThreeOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
@@ -377,6 +424,21 @@ namespace Task1
             return false;
         }
 
+        static ThreeOfAKind MakeThreeOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            Rank highCard = Rank.Value2; // Use unassigment variable
+            Rank kicker = Rank.Value2;
+            foreach (KeyValuePair<Rank, int> entry in ranks)
+            {
+                if (entry.Value == 3)
+                { highCard = entry.Key; }
+                if (entry.Value == 1)
+                { kicker = entry.Key; }
+            }
+             return new ThreeOfAKind(highCard, kicker); 
+
+        }
+
         static bool IsTwoPairs(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             if (ranks.Count == 3 && ranks.ContainsValue(2))
@@ -385,6 +447,22 @@ namespace Task1
                 return true;
             }
             return false;
+        }
+
+        static TwoPairs MakeTwoPairs(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            Rank highPair = Rank.Value2; // Use unassigment variable
+            Rank lowPair = Rank.Value2;
+            Rank kicker = Rank.Value2;
+            foreach (KeyValuePair<Rank, int> entry in ranks)
+            {
+               if (entry.Value == 2 && entry.Key > (entry.Key+1)) //HYETA KAKAYATo
+                { highPair = entry.Key; }
+                if (entry.Value == 1)
+                { kicker = entry.Key; }
+            }
+            return new TwoPairs(highPair, lowPair, kicker); 
+
         }
 
         static bool IsPair(IList<Card> combCards, Dictionary<Rank, int> ranks)
@@ -397,68 +475,149 @@ namespace Task1
             return false;
         }
 
-        public interface ICombination
+        static Pair MakePair(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-           public Rank Rank { get; }
-           public Suit Suit { get; }
+            Rank highCard = Rank.Value2; // Use unassigment variable
+            Rank kicker = Rank.Value2;
+            foreach (KeyValuePair<Rank, int> entry in ranks)
+            {
+                if (entry.Value == 2)
+                { highCard = entry.Key; }
+                if (entry.Value == 1)
+                { kicker = entry.Key; }
+            }
+            return new Pair(highCard, kicker);
+
+        }
+
+        static HighCard MakeHighCard(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        {
+            Rank highCard = ranks.Keys.Max();
+            return new HighCard(highCard);
+
+        }
+       
+        public interface ICombination
+        {}
+
+        public class StraightFlush : ICombination
+        {
+            public Rank HighCard { get; }
+
+            public StraightFlush(Rank r)
+            {
+                this.HighCard = r;
+            }
+
         }
 
         public class  FullHouse: ICombination
         {
-           public Rank Rank { get; }
-           public Suit Suit { get; }
+           public Rank TwoCard { get; }
+           public Rank ThreeCard { get; }
+           public Rank Kicker { get; }
+
+           public FullHouse(Rank th, Rank tw, Rank k)
+           {
+                this.ThreeCard = th;
+                this.TwoCard = tw;
+                this.Kicker = Kicker;
+           }
+
         }
 
         public class Straight : ICombination
         {
            public Rank Rank { get; }
-           public Suit Suit { get; }
+
+            public Straight(Rank r)
+            {
+                this.Rank = r;
+            }
         }
 
-        public class StraightFlush : ICombination
-        {
-            public Rank Rank { get; }
-            public Suit Suit { get; }
-        }
+
 
         public class Flush : ICombination
         {
             public Rank Rank { get; }
-            public Suit Suit { get; }
+
+            public Flush(Rank r)
+            {
+                this.Rank = r;
+            }
         }
 
         public class FourOfAKind : ICombination
         {
-            public Rank Rank { get; }
-            public Suit Suit { get; }
+            public Rank HighCard { get; }
+            public Rank Kicker { get; }
+
+            public FourOfAKind(Rank r, Rank k)
+            {
+                this.HighCard = r;
+                this.Kicker = k;
+            }
         }
 
         public class ThreeOfAKind : ICombination
         {
-            public Rank Rank { get; }
-            public Suit Suit { get; }
+            public Rank HighCard { get; }
+            public Rank Kicker { get; }
+
+            public ThreeOfAKind(Rank r, Rank k)
+            {
+                this.HighCard = r;
+                this.Kicker = k;
+            }
         }
 
-        public class TwoPair : ICombination
+        public class TwoPairs : ICombination
         {
-            public Rank Rank { get; }
-            public Suit Suit { get; }
+            public Rank HighPair { get; }
+            public Rank LowPair { get; }
+            public Rank Kicker { get; }
+
+            public TwoPairs(Rank hp, Rank lp, Rank k)
+            {
+                this.HighPair = hp;
+                this.LowPair = lp;
+                this.Kicker = k; 
+            }
         }
 
         public class Pair : ICombination
         {
-            public Rank Rank { get; }
-            public Suit Suit { get; }
+            public Rank HighPair { get; }
+            public Rank Kicker { get; }
+            public Pair(Rank hp, Rank k)
+            {
+                this.HighPair = hp;
+                this.Kicker = k;
+            }
+
         }
 
-        public static ICombination SortHands(List <Combination> comb)
+        public class HighCard : ICombination
+        {
+            public Rank Kicker { get; }
+            public HighCard(Rank r)
+            {
+                this.Kicker = r;
+            }
+
+        }
+
+
+
+     /*  public static ICombination SortHands(List <Combination> comb)
         {
             foreach (var c in comb)
             {
                 switch (c)
                 {
                     case Combination.StraightFLush:
-                        return new StraightFlush();
+                        return new StraightFlush(c,);
                     case Combination.FourOfAKind:
                         return new FourOfAKind();
                     case Combination.FullHouse:
@@ -478,10 +637,10 @@ namespace Task1
                         break;
                 }
             }
-            return new ThreeOfAKind();
+            return new HighCard();
         }
 
-        /*  public static char RankToString(Rank r)
+        public static char RankToString(Rank r)
           {
               switch (r)
               {
