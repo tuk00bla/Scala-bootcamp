@@ -132,7 +132,7 @@ namespace Task1
     }
 
 
-    
+
 
     static class Program
     {
@@ -153,6 +153,7 @@ namespace Task1
                 Console.Write("'{0}' ", s);
                 Console.WriteLine();
             }
+
             switch (tokens[0])
             {
                 case "texas-holdem":
@@ -225,7 +226,7 @@ namespace Task1
             else if (IsFullHouse(cards, ranks, suits)) { return Combination.FullHouse; }
             else if (IsFlush(cards, suits)) { return Combination.Flush; }
             else if (IsStraight(cards, ranks)) { return Combination.Straight; }
-            else if (IsThreeOfAKind(cards, ranks)) { return Combination.ThreeOfAKind;}
+            else if (IsThreeOfAKind(cards, ranks)) { return Combination.ThreeOfAKind; }
             else if (IsTwoPairs(cards, ranks)) { return Combination.TwoPair; }
             else if (IsPair(cards, ranks)) { return Combination.Pair; }
             else return Combination.HighCard;
@@ -301,7 +302,7 @@ namespace Task1
                 default:
                     break;
             }
-        return returnSuit;
+            return returnSuit;
         }
 
         static bool IsStraight(IList<Card> combCards, Dictionary<Rank, int> ranks)
@@ -310,7 +311,7 @@ namespace Task1
             {
                 List<Rank> sortedRanks = ranks.Keys.ToList();
                 sortedRanks.Sort();
-               
+
                 for (int count = 0; count < (sortedRanks.Count - 1); count++)
                 {
                     var element1 = sortedRanks[count];
@@ -321,15 +322,15 @@ namespace Task1
                     }
                 }
                 return true;
-            } 
+            }
             return false;
         }
 
         static bool IsFlush(IList<Card> combCards, Dictionary<Suit, int> suits)
         {
-            if(suits.ContainsValue(5))
+            if (suits.ContainsValue(5))
             {
-             //   Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
+                //   Console.WriteLine($"{{{combCards[0].Suit} {combCards[1].Suit} {combCards[2].Suit} {combCards[3].Suit} {combCards[4].Suit}}}");
                 return true;
             }
             return false;
@@ -337,9 +338,9 @@ namespace Task1
 
         static bool IsStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-            if (IsStraight(combCards, ranks) && IsFlush(combCards, suits) )
+            if (IsStraight(combCards, ranks) && IsFlush(combCards, suits))
             {
-             //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             else
@@ -350,7 +351,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(4))
             {
-             //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                //   Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -360,7 +361,7 @@ namespace Task1
         {
             if (ranks.Count == 2 && (ranks.ContainsValue(2) && ranks.ContainsValue(3)))
             {
-             //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -370,7 +371,7 @@ namespace Task1
         {
             if (ranks.ContainsValue(3))
             {
-              //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -380,7 +381,7 @@ namespace Task1
         {
             if (ranks.Count == 3 && ranks.ContainsValue(2))
             {
-              //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                //  Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
@@ -390,30 +391,114 @@ namespace Task1
         {
             if (ranks.ContainsValue(2))
             {
-               // Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
+                // Console.WriteLine($"{{{combCards[0].Rank} {combCards[1].Rank} {combCards[2].Rank} {combCards[3].Rank} {combCards[4].Rank}}}");
                 return true;
             }
             return false;
         }
 
-      /*  public static char RankToString(Rank r)
+        public interface ICombination
         {
-            switch (r)
-            {
-                case Suit.ValueH:
-                    return 'h';
-                case Suit.ValueD:
-                    return 'd';
-                case Suit.ValueC:
-                    return 'c';
-                case Suit.ValueS:
-                    return 's';
-                default:
-                    return 'g';
-            }
-        } */
+           public Rank Rank { get; }
+           public Suit Suit { get; }
+        }
 
-     
+        public class  FullHouse: ICombination
+        {
+           public Rank Rank { get; }
+           public Suit Suit { get; }
+        }
+
+        public class Straight : ICombination
+        {
+           public Rank Rank { get; }
+           public Suit Suit { get; }
+        }
+
+        public class StraightFlush : ICombination
+        {
+            public Rank Rank { get; }
+            public Suit Suit { get; }
+        }
+
+        public class Flush : ICombination
+        {
+            public Rank Rank { get; }
+            public Suit Suit { get; }
+        }
+
+        public class FourOfAKind : ICombination
+        {
+            public Rank Rank { get; }
+            public Suit Suit { get; }
+        }
+
+        public class ThreeOfAKind : ICombination
+        {
+            public Rank Rank { get; }
+            public Suit Suit { get; }
+        }
+
+        public class TwoPair : ICombination
+        {
+            public Rank Rank { get; }
+            public Suit Suit { get; }
+        }
+
+        public class Pair : ICombination
+        {
+            public Rank Rank { get; }
+            public Suit Suit { get; }
+        }
+
+        public static ICombination SortHands(List <Combination> comb)
+        {
+            foreach (var c in comb)
+            {
+                switch (c)
+                {
+                    case Combination.StraightFLush:
+                        return new StraightFlush();
+                    case Combination.FourOfAKind:
+                        return new FourOfAKind();
+                    case Combination.FullHouse:
+                        return new FullHouse();
+                    case Combination.Flush:
+                        return new Flush();
+                    case Combination.Straight:
+                        return new Straight();
+                    case Combination.ThreeOfAKind:
+                        return new ThreeOfAKind();
+                    case Combination.TwoPair:
+                        return new TwoPair();
+                    case Combination.Pair:
+                        return new Pair();
+                    default:
+                        Console.WriteLine("Not found");
+                        break;
+                }
+            }
+            return new ThreeOfAKind();
+        }
+
+        /*  public static char RankToString(Rank r)
+          {
+              switch (r)
+              {
+                  case Suit.ValueH:
+                      return 'h';
+                  case Suit.ValueD:
+                      return 'd';
+                  case Suit.ValueC:
+                      return 'c';
+                  case Suit.ValueS:
+                      return 's';
+                  default:
+                      return 'g';
+              }
+          } */
+
+
 
     }
 }
