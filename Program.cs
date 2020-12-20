@@ -458,10 +458,10 @@ namespace Task1
             Rank highPair = Rank.Value2; // Use unassigment variable
             Rank lowPair = Rank.Value2;
             Rank kicker = Rank.Value2;
-
+            List<Rank> highPairs = new List<Rank>();
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
-                List<Rank> highPairs = new List<Rank>();
+                
                 if (entry.Value == 2) 
                 {
                     highPairs.Add(entry.Key);
