@@ -538,7 +538,18 @@ namespace Task1
             }
 
             public int CompareTo(object obj)
-            { return 0; }
+            {
+                StraightFlush compObj = (StraightFlush)obj;
+
+                if (this.HighCard > compObj.HighCard)
+                    return 1;
+
+                if (this.HighCard < compObj.HighCard)
+                    return -1;
+
+                else
+                    return 0;
+            }
             public override string ToString()
             {
                 return "STRAIGHT FLUSH: RANK -> " + this.HighCard;
@@ -547,17 +558,27 @@ namespace Task1
 
         public class  FullHouse: ICombination, IComparable
         {
-           public Rank TwoCard { get; }
-           public Rank ThreeCard { get; }
+            public Rank TwoCard { get; }
+            public Rank ThreeCard { get; }
 
-           public FullHouse(Rank th, Rank tw)
-           {
+            public FullHouse(Rank th, Rank tw)
+            {
                 this.ThreeCard = th;
                 this.TwoCard = tw;
-           }
+            }
 
             public int CompareTo(object obj)
-            { return 0; }
+            {
+                FullHouse compObj = (FullHouse)obj;
+                if (this.ThreeCard > compObj.ThreeCard && this.TwoCard > compObj.TwoCard)
+                    return 1;
+
+                if (this.ThreeCard < compObj.ThreeCard && this.TwoCard < compObj.TwoCard)
+                    return -1;
+
+                else
+                    return 0;
+            }
 
             public override string ToString()
             {
@@ -576,7 +597,18 @@ namespace Task1
             }
 
             public int CompareTo(object obj)
-            { return 0; }
+            {
+                Straight compObj = (Straight)obj;
+
+                if (this.Rank > compObj.Rank)
+                    return 1;
+
+                if (this.Rank < compObj.Rank)
+                    return -1;
+
+                else
+                    return 0;
+            }
 
             public override string ToString()
             {
@@ -596,7 +628,18 @@ namespace Task1
             }
 
             public int CompareTo(object obj)
-            { return 0; }
+            {
+                Flush compObj = (Flush)obj;
+
+                if (this.Rank > compObj.Rank)
+                    return 1;
+
+                if (this.Rank < compObj.Rank)
+                    return -1;
+
+                else
+                    return 0;
+            }
 
             public override string ToString()
             {
@@ -616,7 +659,17 @@ namespace Task1
             }
 
             public int CompareTo(object obj)
-            { return 0; }
+            {
+                FourOfAKind compObj = (FourOfAKind)obj;
+                if (this.HighCard > compObj.HighCard)
+                    return 1;
+
+                if (this.HighCard < compObj.HighCard)
+                    return -1;
+
+                else
+                    return 0;
+            }
 
             public override string ToString()
             {
@@ -691,8 +744,19 @@ namespace Task1
                 this.Kicker = r;
             }
 
-            public int CompareTo(object obj)
-            { return 0; }
+            public int CompareTo(Object obj)
+            {
+                HighCard compObj = (HighCard)obj;
+
+                if (this.Kicker > compObj.Kicker)
+                    return 1;
+
+                if (this.Kicker < compObj.Kicker)
+                    return -1;
+
+                else
+                    return 0;
+            }
             public override string ToString()
             {
                 return "HIGH CARD -> " + this.Kicker;
