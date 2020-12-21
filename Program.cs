@@ -220,15 +220,15 @@ namespace Task1
 
         private static ICombination FindCombination(IList<Card> cards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
         {
-            if (IsStraightFlush(cards, ranks, suits)) { return MakeStraightFlush(cards, ranks, suits); }
+            if (IsStraightFlush(cards, ranks, suits)) { return MakeStraightFlush(cards, ranks); }
             else if (IsFourOfAKind(cards, ranks)) { return MakeFourOfAKind(cards, ranks); }
-            else if (IsFullHouse(cards, ranks, suits)) { return MakeFullHouse(cards, ranks, suits); }
-            else if (IsFlush(cards, suits)) { return MakeFlush(cards, ranks, suits); }
-            else if (IsStraight(cards, ranks)) { return MakeStraight(cards, ranks, suits); }
-            else if (IsThreeOfAKind(cards, ranks)) { return MakeThreeOfAKind(cards, ranks, suits); }
-            else if (IsTwoPairs(cards, ranks)) { return MakeTwoPairs(cards, ranks, suits); }
-            else if (IsPair(cards, ranks)) { return MakePair(cards, ranks, suits); }
-            else return MakeHighCard(cards, ranks, suits) ;
+            else if (IsFullHouse(cards, ranks, suits)) { return MakeFullHouse(cards, ranks); }
+            else if (IsFlush(cards, suits)) { return MakeFlush(cards, ranks); }
+            else if (IsStraight(cards, ranks)) { return MakeStraight(cards, ranks); }
+            else if (IsThreeOfAKind(cards, ranks)) { return MakeThreeOfAKind(cards, ranks); }
+            else if (IsTwoPairs(cards, ranks)) { return MakeTwoPairs(cards, ranks); }
+            else if (IsPair(cards, ranks)) { return MakePair(cards, ranks); }
+            else return MakeHighCard(cards, ranks) ;
         }
 
         static Dictionary<Rank, int> GroupRanks(IList<Card> cards)
@@ -313,7 +313,7 @@ namespace Task1
             else
                 return false;
         }
-        static StraightFlush MakeStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static StraightFlush MakeStraightFlush(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
            Rank highCard = ranks.Keys.Max();
            return new StraightFlush(highCard);
@@ -354,18 +354,18 @@ namespace Task1
             return false;
         }
 
-        static FullHouse MakeFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static FullHouse MakeFullHouse(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
-            Rank highPair = Rank.Value2; // Use unassigment variable
-            Rank lowPair = Rank.Value2;
+            Rank threeCards = Rank.Value2; // Use unassigment variable
+            Rank twoCards = Rank.Value2;
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
                 if (entry.Value == 3)
-                { highPair = entry.Key; }
+                { threeCards = entry.Key; }
                 if (entry.Value == 2)
-                {  lowPair = entry.Key; }
+                {  twoCards = entry.Key; }
             }
-            return new FullHouse(highPair, lowPair); 
+            return new FullHouse(threeCards, twoCards); 
 
         }
 
@@ -379,7 +379,7 @@ namespace Task1
             return false;
         }
 
-        static Flush MakeFlush(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static Flush MakeFlush(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             Rank highCard = ranks.Keys.Max();
             return new Flush(highCard);
@@ -410,7 +410,7 @@ namespace Task1
             return false;
         }
 
-        static Straight MakeStraight(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static Straight MakeStraight(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             Rank highCard = ranks.Keys.Max();
             List<Rank> sortedRanks = ranks.Keys.ToList();
@@ -420,7 +420,6 @@ namespace Task1
             if(Enumerable.SequenceEqual(sortedRanks, Astraight))
             {
                 sortedRanks.Remove(highCard);
-                sortedRanks.Sort();
                 highCard = sortedRanks.Max();
             }
             return new Straight(highCard);
@@ -437,7 +436,7 @@ namespace Task1
             return false;
         }
 
-        static ThreeOfAKind MakeThreeOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static ThreeOfAKind MakeThreeOfAKind(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             Rank highCard = Rank.Value2; // Use unassigment variable
             Rank kicker = Rank.Value2;
@@ -447,13 +446,13 @@ namespace Task1
                 if (entry.Value == 3)
                 { 
                     highCard = entry.Key;
-                    List<Rank> sortedRanks = ranks.Keys.ToList();
-                    sortedRanks.Remove(entry.Key);
-                    sortedRanks.Sort();
-                    kicker = sortedRanks.Max();
                 }
             }
-             return new ThreeOfAKind(highCard, kicker); 
+
+            List<Rank> sortedRanks = ranks.Keys.ToList();
+            sortedRanks.Remove(highCard);
+            kicker = sortedRanks.Max();
+            return new ThreeOfAKind(highCard, kicker); 
 
         }
 
@@ -467,25 +466,25 @@ namespace Task1
             return false;
         }
 
-        static TwoPairs MakeTwoPairs(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static TwoPairs MakeTwoPairs(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             Rank highPair = Rank.Value2; // Use unassigment variable
             Rank lowPair = Rank.Value2;
             Rank kicker = Rank.Value2;
-            List<Rank> highPairs = new List<Rank>();
+            List<Rank> pairs = new List<Rank>();
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
-                
                 if (entry.Value == 2) 
                 {
-                    highPairs.Add(entry.Key);
-                    highPairs.Sort();
-                    highPair = highPairs.Max();
-                    lowPair = highPairs.Min();                 
+                    pairs.Add(entry.Key);
+                                  
                 }
                 if (entry.Value == 1)
                 { kicker = entry.Key; }
             }
+
+            highPair = pairs.Max();
+            lowPair = pairs.Min();
             return new TwoPairs(highPair, lowPair, kicker); 
 
         }
@@ -500,25 +499,24 @@ namespace Task1
             return false;
         }
 
-        static Pair MakePair(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static Pair MakePair(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             Rank highCard = Rank.Value2; // Use unassigment variable
             Rank kicker = Rank.Value2;
+            List<Rank> potentialKickers = ranks.Keys.ToList();
             foreach (KeyValuePair<Rank, int> entry in ranks)
             {
                 if (entry.Value == 2)
-                {   highCard = entry.Key;
-                    List<Rank> sortedRanks = ranks.Keys.ToList();
-                    sortedRanks.Remove(entry.Key);
-                    sortedRanks.Sort();
-                    kicker = sortedRanks.Max();
-                }
+                {   highCard = entry.Key;}
             }
+            potentialKickers.Remove(highCard);
+            potentialKickers.Sort();
+            kicker = potentialKickers.Max();
             return new Pair(highCard, kicker);
 
         }
 
-        static HighCard MakeHighCard(IList<Card> combCards, Dictionary<Rank, int> ranks, Dictionary<Suit, int> suits)
+        static HighCard MakeHighCard(IList<Card> combCards, Dictionary<Rank, int> ranks)
         {
             Rank highCard = ranks.Keys.Max();
             return new HighCard(highCard);
