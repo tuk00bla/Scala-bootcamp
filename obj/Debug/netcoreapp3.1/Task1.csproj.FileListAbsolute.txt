@@ -14,3 +14,19 @@ C:\Task\Task1\Task1\bin\Debug\netcoreapp3.1\Combinatorics.dll
 C:\Task\Task1\Task1\bin\Debug\netcoreapp3.1\System.ServiceModel.dll
 C:\Task\Task1\Task1\obj\Debug\netcoreapp3.1\Task1.csproj.CoreCompileInputs.cache
 C:\Task\Task1\Task1\obj\Debug\netcoreapp3.1\Task1.csproj.CopyComplete
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Task1.exe
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Task1.deps.json
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Task1.runtimeconfig.json
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Task1.runtimeconfig.dev.json
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Task1.dll
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Task1.pdb
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\Combinatorics.dll
+C:\Task\Новая папка\Scala01\Task1\bin\Debug\netcoreapp3.1\System.ServiceModel.dll
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.csprojAssemblyReference.cache
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.AssemblyInfoInputs.cache
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.AssemblyInfo.cs
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.csproj.CoreCompileInputs.cache
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.csproj.CopyComplete
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.dll
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.pdb
+C:\Task\Новая папка\Scala01\Task1\obj\Debug\netcoreapp3.1\Task1.genruntimeconfig.cache

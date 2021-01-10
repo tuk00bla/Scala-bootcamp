@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aWLrLOtWaUd3jFnFjwczsodJOO6pszAtDzh4hlnKK9mZd6E3t4Y6TBcshhziGmzWTnqgwY00PUsdHtn8ZAopAQ==",
+  "dgSpecHash": "4tGgcVBv1PF0hCcymBHuMAPKxhEOJu6egl/sLmAcTyhcxooUMtd/PCbCMktNWlRfKhij05DtUty0rQIUi1LFrQ==",
   "success": true,
-  "projectFilePath": "C:\\Task\\Task1\\Task1\\Task1.csproj",
+  "projectFilePath": "C:\\Task\\Новая папка\\Scala01\\Task1\\Task1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Егор\\.nuget\\packages\\combinatorics\\1.1.0.19\\combinatorics.1.1.0.19.nupkg.sha512",
     "C:\\Users\\Егор\\.nuget\\packages\\microsoft.netcore.jit\\1.0.2\\microsoft.netcore.jit.1.0.2.nupkg.sha512",

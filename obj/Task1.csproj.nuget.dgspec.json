@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Task\\Task1\\Task1\\Task1.csproj": {}
+    "C:\\Task\\Новая папка\\Scala01\\Task1\\Task1.csproj": {}
   },
   "projects": {
-    "C:\\Task\\Task1\\Task1\\Task1.csproj": {
+    "C:\\Task\\Новая папка\\Scala01\\Task1\\Task1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Task\\Task1\\Task1\\Task1.csproj",
+        "projectUniqueName": "C:\\Task\\Новая папка\\Scala01\\Task1\\Task1.csproj",
         "projectName": "Task1",
-        "projectPath": "C:\\Task\\Task1\\Task1\\Task1.csproj",
+        "projectPath": "C:\\Task\\Новая папка\\Scala01\\Task1\\Task1.csproj",
         "packagesPath": "C:\\Users\\Егор\\.nuget\\packages\\",
-        "outputPath": "C:\\Task\\Task1\\Task1\\obj\\",
+        "outputPath": "C:\\Task\\Новая папка\\Scala01\\Task1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
